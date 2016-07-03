@@ -1,0 +1,14 @@
+machine:
+  services:
+    - docker
+dependencies:
+  cache_directories:
+    - "~/openapphack-docker-raspbian"
+  override:
+    - docker info
+    - if [[ -e ~/openapphack-docker-raspbian/image.tar ]]; then docker load --input ~/docker-ubuntu/image.tar; fi
+    - docker build -t openapphack/raspbian .
+    - mkdir -p ~/openapphack-docker-raspbian; docker save --output ~/openapphack-docker-raspbian/image.tar openapphack/raspbian
+test:
+  override:
+    - docker run -it openapphack/raspbian echo "Hello World"
